@@ -1,0 +1,295 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <link href="http://cdn.amazeui.org/amazeui/2.7.2/css/amazeui.min.css" rel="stylesheet">   
+   <link href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+    <script src="http://apps.bdimg.com/libs/jquery/1.6.4/jquery.js"></script>
+	<script src="https://cdn.bootcss.com/cytoscape/2.7.7/cytoscape.min.js"></script> 
+<title>analysis_result</title>
+    <style type="text/css">
+        /* cytoscape graph */
+        #cy {
+            height: 300px;
+            width: 80%;
+            background-color: #f9f9f9;
+            margin-left: 10%
+        }
+
+    </style>
+</head>
+<body>
+
+<% include include/index-top.html %>
+
+
+<div class="page-header">
+    <h2>Analyze the multiple miRNAs interested by the biologists</h2>
+</div>
+<div id="cy"></div>
+</div>
+<div class="container">
+    <div id="legend" class="alert alert-success" style="margin-top: 10px">
+        <img style="width: 30px;height: 30px"
+             src="http://upload-images.jianshu.io/upload_images/3229842-dcb973a1257a3043.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">miRNAs
+        associated with <span id="mirnas1"></span> <img style="height: 30px;height: 30px"
+                                                        src="http://upload-images.jianshu.io/upload_images/3229842-10d8f4e3f366da3a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">miRNAs
+        not associated with <span id="mirnas2"></span>
+
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-4">
+                    <h4>
+                        Select a miRNA
+                    </h4>
+                    <select id="mirnaname" name="mirnaname" class="form-control" size="20" data-container="body"
+                            data-width="auto" data-size="auto" data-live-search="true" data-header="Select a miRNA">
+                    </select>
+                </div>
+                <div class="col-md-8">
+                    <h4>
+                        Select a disease
+                    </h4>
+                    <select id="disname" name="disname" class="form-control" size="20" data-container="body"
+                            data-width="auto" data-size="auto" data-live-search="true"
+                            data-header="Select a disease"></select>
+                </div>
+            </div>
+            <div class="alert alert-info" style="margin-top: 10px">
+                <p>After you choose a miRNA, the diseases associated with it will be listed.</p>
+                <p>After you choose a disease, the miRNAs associated with it will be displayed in blue. The others will
+                    be displayed in orange.</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="page-header">
+                <h3>Detailed data</h3>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover" id="table_result">
+                    <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>miRNA1</th>
+                        <th>miRNA2</th>
+                        <th>Similarity</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="height: 60px"></div>
+<% include include/index-bottom.html %>
+</body>
+<script>
+    $("#analysis").addClass("am-active");
+    var objSelect3 = document.getElementById("disname");
+    var mirnaname = document.getElementById("mirnaname");
+    var table = document.getElementById("table_result");
+    var newTr;
+    var _search = window.location.search;
+    _search = _search.split("=")[1];
+    var list = _search.split("%20");
+
+    for (var i = 0; i < list.length; i++) {
+        mirnaname.options[mirnaname.length] = new Option(list[i], list[i]);
+    }
+    mirnaname.options[0].setAttribute("selected", "true");
+
+    $("#mirnaname").change(function () {
+        getzzz();
+    });
+
+    var mirnas1 = document.getElementById("mirnas1");
+    var mirnas2 = document.getElementById("mirnas2");
+    mirnas1.innerText = ("ACTH-Secreting Pituitary Adenoma");
+    mirnas2.innerText = ("ACTH-Secreting Pituitary Adenoma");
+
+
+    function getzzz() {
+        $("#disname").empty();
+        var aa = $("#mirnaname option:selected").text();
+        $(function () {
+            $.getJSON('/get_all_prediction2_2', {
+                id: aa
+            }, function (data) {
+                var list2 = data.name;
+                for (var i = 0; i < list2.length; i++) {
+                    objSelect3.options[objSelect3.length] = new Option(list2[i].disname, list2[i].disname);
+                }
+            });
+            return false;
+        });
+    }
+
+    getzzz();
+    var m = 0;
+    var bian = new Array();
+
+    $(function () {
+        $.getJSON('/select_similarly', {a: JSON.stringify(list)}, function (result) {
+            bian = result;
+            for (var i = 0; i < result.length; i++) {
+                newTr = table.insertRow();
+                var newTd0 = newTr.insertCell();
+                var newTd1 = newTr.insertCell();
+                var newTd2 = newTr.insertCell();
+                newTd0.innerText = ++m;
+                newTd1.innerText = result[i].field1;
+                newTd2.innerText = result[i].field2;
+                var newTd3 = newTr.insertCell();
+                newTd3.innerText = result[i].field3;
+            }
+            draw(list, result);
+        });
+        return false;
+    });
+
+
+    function draw(list, list2) {
+        var a = [];
+        var b = [];
+        var z;
+        var w;
+        for (var i = 0; i < list.length; i++) {
+            z = {data: {id: list[i], label: "3", name: list[i]}};
+            a.push(z);
+        }
+        for (var i = 0; i < list2.length; i++) {
+            w = {data: {source: list2[i].field1, target: list2[i].field2}};
+            b.push(w);
+        }
+        cytoscape({
+            container: document.getElementById('cy'),
+            style: [
+                {
+                    selector: 'node[label = "Person"]',
+                    css: {'background-color': '#6FB1FC', 'content': ''}
+                },
+                {
+                    selector: 'node[label = "3"]',
+                    css: {'background-color': '#F5A45D', 'content': 'data(name)'}
+                },
+                {
+                    selector: 'edge',
+                    css: {'content': '', '': 'triangle'}
+                }
+            ],
+            elements: {
+                nodes: a,
+                edges: b
+
+            },
+            layout: {name: 'cose', fit: true}
+        });
+
+
+    }
+
+
+    function draw2(list, list2, list3) {
+        var a = [];
+        var b = [];
+        var z;
+        var w;
+        for (var i = 0; i < list.length; i++) {
+            if (list3.indexOf(list[i]) != -1) {
+                z = {data: {id: list[i], label: "4", name: list[i]}};
+            } else {
+                z = {data: {id: list[i], label: "3", name: list[i]}};
+            }
+            a.push(z);
+        }
+        for (var i = 0; i < list2.length; i++) {
+            w = {data: {source: list2[i].field1, target: list2[i].field2}};
+            b.push(w);
+        }
+        cytoscape({
+            container: document.getElementById('cy'),
+            style: [
+                {
+                    selector: 'node[label = "4"]',
+                    css: {'background-color': '#6FB1FC', 'content': 'data(name)'}
+                },
+                {
+                    selector: 'node[label = "3"]',
+                    css: {'background-color': '#F5A45D', 'content': 'data(name)'}
+                },
+                {
+                    selector: 'edge',
+                    css: {'content': '', '': 'triangle'}
+                }
+            ],
+            elements: {
+                nodes: a,
+                edges: b
+
+            },
+            layout: {name: 'cose', fit: true}
+        });
+
+    }
+
+    function _draw() {
+        $.getJSON('/get_all_prediction1_2', {id: $("#disname option:selected").text()}, function (result) {
+            var list3 = result.name;
+            var list2 = new Array();
+            for (var i = 0; i < list3.length - 1; i++) {
+                list2.push(list3[i].miname);
+            }
+            draw2(list, bian, list2)
+        });
+    }
+
+
+    $("#disname").change(function () {
+        var mirnas1 = document.getElementById("mirnas1");
+        var mirnas2 = document.getElementById("mirnas2");
+        mirnas1.innerText = $("#disname option:selected").text();
+        mirnas2.innerText = $("#disname option:selected").text();
+        _draw();
+
+    });
+
+
+</script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

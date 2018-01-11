@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <link href="http://cdn.amazeui.org/amazeui/2.7.2/css/amazeui.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-select.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/reset.css">
+    <script src="http://cdn.bootcss.com/bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <script src="/static/script/bootstrap-select.js"></script>
+    <script src="http://apps.bdimg.com/libs/jquery/1.6.4/jquery.js"></script>
+    <title>Analysis</title>
+    <style>
+
+    </style>
+</head>
+<body>
+
+<% include include/index-top.html %>
+<div class="container">
+    <div class="page-header">
+        <h2 class="text-center" style="color: #000000">Analyze the multiple miRNAs interested by the biologists</h2>
+    </div>
+    <div style="margin: 0 0 10px">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Select the miRNAs</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row" style=" vertical-align: middle">
+                    <div class="col-md-4">
+                        <select id="leftSelection" multiple class="form-control" size="28">
+
+                        </select>
+                    </div>
+                    <div class="pull-left" style="padding-top:230px">
+                        <p>
+                            <button type="button" class="btn btn-default" id="toRight">&rArr;</button>
+                        </p>
+                        <p>
+                            <button type="button" class="btn btn-default" id="toLeft">&lArr;</button>
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <select id="rightSelection" name="mirnaname" multiple class="form-control" size="28"></select>
+                    </div>
+                    <div class="pull-left" style="padding-top:248px">
+                        <input type="button" class="btn btn-default" value="submit"
+                               onClick="Post()">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="alert alert-info" style="margin-bottom: 100px">
+        <p>
+        Please choose the multiple miRNAs that you are interested. DMPred will calculate the functional similarity between miRNAs. The network composed of the nodes will be constructed and visualized with web Cytoscape.
+        </p>
+    </div>
+</div>
+<% include include/index-bottom.html %>
+
+</body>
+<script>
+    $("#analysis").addClass("am-active");
+    $(function () {
+        $('#toRight').click(function () {
+            var options = $('#leftSelection option:selected').remove();
+            options.appendTo($('#rightSelection'));
+        });
+        $('#toLeft').click(function () {
+            var options = $('#rightSelection option:selected').remove();
+            options.appendTo($('#leftSelection'));
+        });
+        $('#submitButton').click(function () {
+            $('#rightSelection option').attr("selected", true);
+        });
+    });
+    var objSelect3 = document.getElementById("leftSelection");
+    $(function () {
+        $.getJSON('/init_prediction_2', {}, function (result) {
+            console.log(result);
+            var list = result.name;
+            for (var i = 0; i < list.length; i++) {
+                objSelect3.options[objSelect3.length] = new Option(list[i].miname + " ", list[i].miname + " ");
+                //allmir.options[allmir.length] = new Option(list[i].disname, list[i].disname);
+            }
+            $('.selectpicker').selectpicker('refresh');
+        });
+        return false;
+    });
+    $(function () {
+        $('#navAnalysis').addClass("active");
+    });
+    function Post() {
+        location.href = 'analysis_result?name=' + $("#rightSelection option:selected").text();
+    }
+</script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

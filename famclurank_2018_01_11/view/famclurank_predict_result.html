@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  <title>FamCluRank</title>
+  <meta name="keywords" content="microRNA, cancer, expression"/>
+  <meta name="description"
+        content="A method for identifying disease-related microRNAs in the heterogeneous network with node attributes"/>
+  <link href="/static/css/default.css" rel="stylesheet" type="text/css"/>
+  <link href="/static/css/picswitch.css" rel="stylesheet" type="text/css"/>
+  <script type="text/javascript" src="/static/script/default.js"></script>
+  <script type="text/javascript" src="/static/script/picswitch.js"></script>
+  <!--<link href="http://cdn.amazeui.org/amazeui/2.7.2/css/amazeui.min.css" rel="stylesheet">-->
+  <link href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
+  <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+  <script src="http://cdn.bootcss.com/bootstrap/2.3.2/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+</head>
+<body>
+<div id="header">
+  <div id="menu">
+    <ul>
+      <li><a href="/famclurank_index">Home</a></li>
+      <li class="current_page_item"><a href="/famclurank_prediction">Prediction</a></li>
+      <li><a href="/famclurank_download">Download</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="container" style="margin: 0 auto;width: 1080px">
+  <div class="page-header" style="text-align: center">
+    <h2>Predict the <span id="dis_name"></span>-related miRNA candidates</h2>
+  </div>
+  <div class="alert alert-info">
+    The rows in white demonstrate the <span id="dis_name2"></span>-related miRNA candidates, and
+    the rows in blue list the known <span id="dis_name3"></span>-related miRNAs.
+  </div>
+  <br/>
+  <table class="table table-hover table-striped" id="result_table">
+    <thead>
+    <tr>
+      <th>Rank</th>
+      <th>miRNA</th>
+      <th>Score</th>
+    </tr>
+    </thead>
+  </table>
+</div>
+
+<div id="footer">
+  <div id="footer-wrap">
+    <p id="legal">
+      <img style="height:30px;width:30px;vertical-align: middle;"
+           src="http://upload-images.jianshu.io/upload_images/3229842-784916dee47794ce.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+      If you have any problem of running FamCluRank web server, please contact
+
+      <a href="mailto:xuanpinghdu@126.com" data-toggle="tooltip" title=""
+         data-original-title="xuanpinghdu@126.com">Ping Xuan</a> or
+      <a href="mailto:xuanpinghdu@126.com" data-toggle="tooltip" title=""
+         data-original-title="xuanpinghdu@126.com">Tiangang Zhang</a>.</p>
+  </div>
+</div>
+</body>
+
+
+<script>
+    $("#prediction").addClass("am-active");
+    var table = document.getElementById("result_table");
+    var _search = window.location.search;
+    _search = _search.split("=")[1];
+    _search = _search.replace("%20", " ");
+
+    _search = _search.replace("%20", " ");
+    _search = _search.replace("%20", " ");
+    _search = _search.replace("%20", " ");
+    _search = _search.replace("%20", " ");
+
+    var dis_name=document.getElementById("dis_name");
+    var dis_name2=document.getElementById("dis_name2");
+    var dis_name3=document.getElementById("dis_name3");
+    dis_name.innerText=_search;
+    dis_name2.innerText=_search;
+    dis_name3.innerText=_search;
+
+
+
+    function getaaa() {
+        $.getJSON('/get_all_famclurank_unknown_mirnas', {id: _search}, function (result) {
+            var list = result.name;
+            for (var i = 0; i < list.length; i++) {
+                if (i > 99) {
+                    getbbb();
+                    return;
+                }
+                var newTr = table.insertRow();
+                var newTd0 = newTr.insertCell();
+                var newTd1 = newTr.insertCell();
+                var newTd2 = newTr.insertCell();
+                newTd0.innerText = i + 1;
+                newTd1.innerText = list[i].miname;
+                newTd2.innerText = list[i].score;
+            }
+            getbbb();
+        });
+
+        function getbbb(){
+            $.getJSON('/get_all_famclurank_known_mirnas', {id: _search}, function (result) {
+                var list = result.name;
+                for (var i = 0; i < list.length; i++) {
+                    var newTr = table.insertRow();
+                    newTr.style.backgroundColor="#d6eaf4";
+                    var newTd0 = newTr.insertCell();
+                    var newTd1 = newTr.insertCell();
+                    var newTd2 = newTr.insertCell();
+                    newTd0.innerText = i + 1;
+                    newTd1.innerText = list[i].miname;
+                    newTd2.innerText = 'known';
+                }
+            });
+        }
+    }
+
+
+    getaaa();
+
+</script>
+
+</html>

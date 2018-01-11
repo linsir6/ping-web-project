@@ -1,0 +1,86 @@
+*{
+  margin: 0;
+  padding:0;
+}
+img{
+  height: 25px;
+  vertical-align: middle;
+}
+.container {
+  width: 1080px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.page-header {
+  padding-bottom: 9px;
+  margin: 40px 0 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.page-header h2 {
+  text-align: center;
+  font-size: 30px;
+}
+
+.bootstrap-select>.btn {
+  width: 100%;
+  padding-right: 25px;
+}
+
+.pull-left {
+  float: left !important;
+}
+
+.bootstrap-select.btn-group .btn .caret {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  margin-top: -2px;
+  vertical-align: middle;
+}
+
+
+#footer {
+  width: 100%;
+  position:fixed;
+  bottom:0;
+  left:0;
+  text-align: center;
+  height: 40px;
+  clear: both;
+  background-color: #f5f5f5;
+}
+
+.welcome{
+  color:  blue;
+}
+.to{
+  color:green;
+}
+.the{
+  color: yellow;
+}
+.midp{
+  color: red;
+}
+.summary{
+  padding: 40px 0;
+  background-color: #eee;
+}
+.summary h1{
+  font-size: 65px;
+}
+.details{
+  padding: 20px 0;
+}
+.detail{
+
+  padding: 15px ;
+}
+.intr{
+  border:1px solid #ccc;
+}
+.more{
+  padding: 10px 0;
+}

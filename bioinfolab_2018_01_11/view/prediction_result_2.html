@@ -1,0 +1,116 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/reset.css">
+    <link href="http://cdn.amazeui.org/amazeui/2.7.2/css/amazeui.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://apps.bdimg.com/libs/jquery/1.6.4/jquery.js"></script>
+	    
+<title>Prediction</title>
+</head>
+<body>
+
+<% include include/index-top.html %>
+<div class="container">
+    <div class="page-header">
+        <h2>Predict the <span id="dis_name"></span>-related disease candidates</h2>
+    </div>
+
+    <div class="alert alert-info">
+        The rows in white demonstrate the <span id="dis_name2"></span>-related disease candidates, and the rows in blue
+        list the known <span id="dis_name3"></span>-related diseases.
+    </div>
+    <br/>
+    <table class="table table-hover table-striped" id="result_table">
+        <thead>
+        <tr>
+            <th>Rank</th>
+            <th>Dianame</th>
+            <th>Score</th>
+        </tr>
+        </thead>
+
+    </table>
+
+</div>
+<div style="height: 20px"></div>
+<% include include/index-bottom.html %>
+</body>
+<script>
+    $("#prediction").addClass("am-active");
+    var table = document.getElementById("result_table");
+    var _search = window.location.search;
+    _search = _search.split("=")[1];
+    _search = _search.replace("%20", " ");
+    _search = _search.replace("%20", " ");
+    _search = _search.replace("%20", " ");
+    _search = _search.replace("%20", " ");
+    _search = _search.replace("%20", " ");
+
+    var dis_name=document.getElementById("dis_name");
+    var dis_name2=document.getElementById("dis_name2"); 
+    var dis_name3=document.getElementById("dis_name3");
+    dis_name.innerText=_search;
+    dis_name2.innerText=_search;
+    dis_name3.innerText=_search;
+
+    function getaaa() {
+        $.getJSON('/get_all_prediction2_1', {id: _search}, function (result) {
+            var list = result.name;
+            for (var i = 0; i < list.length - 1; i++) {
+                if (i > 49) {
+                    getbbb();
+                    return;
+                }
+                var newTr = table.insertRow();
+                var newTd0 = newTr.insertCell();
+                var newTd1 = newTr.insertCell();
+                var newTd2 = newTr.insertCell();
+                newTd0.innerText = i + 1;
+                newTd1.innerText = list[i].disname;
+                newTd2.innerText = list[i].score;
+            }
+            getbbb();
+        });
+
+        function getbbb(){
+        $.getJSON('/get_all_prediction2_2', {id: _search}, function (result) {
+            console.log(result);
+            var list = result.name;
+            for (var i = 0; i < list.length - 1; i++) {
+                var newTr = table.insertRow();
+                newTr.style.backgroundColor="#d6eaf4";
+                var newTd0 = newTr.insertCell();
+                var newTd1 = newTr.insertCell();
+                var newTd2 = newTr.insertCell();
+                newTd0.innerText = i + 1;
+                newTd1.innerText = list[i].disname;
+                newTd2.innerText = 'known';
+            }
+
+        });
+      }
+    }
+
+    getaaa();
+
+
+</script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

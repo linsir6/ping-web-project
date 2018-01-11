@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  <title>FamCluRank</title>
+  <meta name="keywords" content="microRNA, cancer, expression"/>
+  <meta name="description"
+        content="A method for identifying disease-related microRNAs in the heterogeneous network with node attributes"/>
+  <link href="/static/css/default.css" rel="stylesheet" type="text/css"/>
+  <link href="/static/css/picswitch.css" rel="stylesheet" type="text/css"/>
+  <script type="text/javascript" src="/static/script/default.js"></script>
+  <script type="text/javascript" src="/static/script/picswitch.js"></script>
+  <!--<link href="http://cdn.amazeui.org/amazeui/2.7.2/css/amazeui.min.css" rel="stylesheet">-->
+  <link href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
+  <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+  <script src="http://cdn.bootcss.com/bootstrap/2.3.2/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+</head>
+<body>
+<div id="header">
+  <div id="menu">
+    <ul>
+      <li><a href="/famclurank_index">Home</a></li>
+      <li class="current_page_item"><a href="/famclurank_prediction">Prediction</a></li>
+      <li><a href="/famclurank_download">Download</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="container" style="margin: 0 auto;width: 1080px">
+  <div class="page-header" style="text-align: center">
+    <h2>Predict the disease-related miRNA candidates</h2>
+  </div>
+  <div class="panel panel-primary">
+    <div class="alert alert-success">
+      <h3 class="panel-title">Select a disease</h3>
+    </div>
+    <div class="panel-body">
+      <div class="form-group">
+        <select id="disss" class="selectpicker" data-live-search="true" name="disss">
+
+        </select>
+        <input type="button" class="btn btn-default" value="submit"
+               onClick="Post()">
+      </div>
+
+    </div>
+  </div>
+
+  <div class="alert alert-info">
+    Please select a disease and click the button to submit.<br/>
+    The known disease miRNAs, the potential disease miRNA candidates and their association scores will be demonstrated.
+  </div>
+</div>
+
+<div id="footer">
+  <div id="footer-wrap">
+    <p id="legal">
+      <img style="height:30px;width:30px;vertical-align: middle;"
+           src="http://upload-images.jianshu.io/upload_images/3229842-784916dee47794ce.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+      If you have any problem of running FamCluRank web server, please contact
+
+      <a href="mailto:xuanpinghdu@126.com" data-toggle="tooltip" title=""
+         data-original-title="xuanpinghdu@126.com">Ping Xuan</a> or
+      <a href="mailto:xuanpinghdu@126.com" data-toggle="tooltip" title=""
+         data-original-title="xuanpinghdu@126.com">Tiangang Zhang</a>.</p>
+  </div>
+</div>
+</body>
+
+<script>
+    var alldis = document.getElementById("disss");
+    var allmir = document.getElementById("mirna");
+    $("#prediction").addClass("am-active");
+
+    $(function () {
+        $.getJSON('/get_all_famclurank_disease', {}, function (result) {
+            var list = result.name;
+            for (var i = 0; i < list.length; i++) {
+                alldis.options[alldis.length] = new Option(list[i].disname, list[i].disname);
+            }
+            $('.selectpicker').selectpicker('refresh');
+        });
+        return false;
+    });
+
+
+
+    function Post() {
+        location.href = 'famclurank_predict_result?name=' + $("#disss option:selected").text();
+    }
+
+</script>
+
+</html>

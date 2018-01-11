@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <link href="http://cdn.amazeui.org/amazeui/2.7.2/css/amazeui.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/reset.css">
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+
+    <title>Prediction</title>
+</head>
+<body>
+
+<% include include/index-top.html %>
+<div class="container">
+    <div class="page-header">
+        <h2>Predict the disease-related miRNA candidates</h2>
+    </div>
+    <div class="panel panel-primary">
+        <div class="alert alert-success">
+            <h3 class="panel-title">Select a disease</h3>
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <select id="disss" class="selectpicker" data-live-search="true" name="disss">
+
+                </select>
+                <input type="button" class="btn btn-default" value="submit"
+                       onClick="Post()">
+            </div>
+
+        </div>
+    </div>
+
+    <div class="alert alert-info">
+        Please select a disease and click the button to submit.<br/>
+        The known disease miRNAs, the potential disease miRNA candidates and their association scores will be demonstrated.
+
+   </div>
+
+    <br>
+<!--
+    <div class="panel panel-primary">
+        <div class="alert alert-success">
+            <h3 class="panel-title">Select a miRNA</h3>
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <select id="mirna" class="selectpicker" data-live-search="true" name="miname">
+
+                </select>
+                <input type="button" class="btn btn-default" value="submit"
+                       onClick="Post2()">
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-info" style="margin-bottom: 100px">
+        Please select a miRNA and click the button to submit.<br/>
+        The known diseases and the potential disease candidates related to the miRNA will be demonstrated.
+    
+</div>-->
+</div>
+
+<% include include/index-bottom.html %>
+
+</body>
+<script>
+    var alldis = document.getElementById("disss");
+    var allmir = document.getElementById("mirna");
+    $("#prediction").addClass("am-active");
+
+    $(function () {
+        $.getJSON('/init_prediction_1', {}, function (result) {
+            var list = result.name;
+            for (var i = 0; i < list.length; i++) {
+                alldis.options[alldis.length] = new Option(list[i].disname, list[i].disname);
+            }
+            $('.selectpicker').selectpicker('refresh');
+        });
+        return false;
+    });
+
+    $(function () {
+        $.getJSON('/init_prediction_2', {}, function (result2) {
+            var list = result2.name;
+            for (var i = 0; i < list.length; i++) {
+                allmir.options[allmir.length] = new Option(list[i].miname, list[i].miname);
+            }
+            $('.selectpicker').selectpicker('refresh');
+        });
+        return false;
+    });
+
+    function Post() {
+        location.href = 'prediction_result_1?name=' + $("#disss option:selected").text();
+    }
+
+    function Post2() {
+        location.href = 'prediction_result_2?name=' + $("#mirna option:selected").text();
+    }
+</script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/reset.css">
+    <link href="http://cdn.amazeui.org/amazeui/2.7.2/css/amazeui.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://apps.bdimg.com/libs/jquery/1.6.4/jquery.js"></script>		   
+
+ <title>Downloads</title>
+</head>
+<body>
+
+<% include include/index-top.html %>
+
+<div class="container">
+    <div style="font-size: 16px; line-height: 1.75">
+        <div class="page-header">
+            <h3>Association data</h3>
+        </div>
+        <p>
+            DMPred constructed the miRNA-disease bilayer network based on the known miRNA-disease associations.
+            These associations were downloaded from the human miRNA disease database (HMDD, released in June
+            2014). After eliminating the redundant information, we get the valid
+            <a href="/static/association_data.txt" target="_blank">association data</a>.
+        </p>
+        <div class="page-header">
+            <h3>Similarity data</h3>
+        </div>
+        <p style="font-size: 16px">
+            The miRNA functional similarities calculated based on the associations of HMDD: <a
+                href="/static/mir_sim_data2.xlsx" target="_blank">miRNA similarity data</a>.
+            <br/>
+            The disease similarities calculated based on their directed acyclic graphs:
+            <a href="/static/dis_sim_data2.xlsx" target="_blank">disease similarity data </a>.
+        </p>
+        <div class="page-header">
+            <h3>Candidates data</h3>
+        </div>
+        <p>
+            The potential miRNA candidates associated with diseases, their ranking, and their association
+            scores: <a
+                href="/static/candidate_data2.xlsx" target="_blank">candidates data</a>.
+        </p>
+    </div>
+</div>
+
+<% include include/index-bottom.html %>
+
+<script>
+    $("#downloads").addClass("am-active");
+
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title>FamCluRank</title>
+	<meta name="keywords" content="microRNA, cancer, expression"/>
+	<meta name="description"
+				content="A method for identifying disease-related microRNAs in the heterogeneous network with node attributes"/>
+	<link href="/static/css/default.css" rel="stylesheet" type="text/css"/>
+	<link href="/static/css/picswitch.css" rel="stylesheet" type="text/css"/>
+	<link href="/static/css/download.css" rel="stylesheet" type="text/css"/>
+	<script type="text/javascript" src="/static/script/default.js"></script>
+	<script type="text/javascript" src="/static/script/picswitch.js"></script>
+</head>
+<body>
+<div id="header">
+	<div id="menu">
+		<ul>
+			<li><a href="/famclurank_index">Home</a></li>
+			<li><a href="/famclurank_prediction">Prediction</a></li>
+			<li class="current_page_item"><a href="/famclurank_download">Download</a></li>
+		</ul>
+	</div>
+</div>
+
+<div class="container">
+	<div style="font-size: 16px; line-height: 1.75">
+		<div class="page-header">
+			<h3>Association data</h3>
+		</div>
+		<p style="font-size: 16px">
+			FamCluRank constructed the miRNA-disease heterogeneous network with node attributes based on the known miRNA-disease associations.
+			The associations were downloaded from the human miRNA disease database (HMDD, released in June 2014).
+			After eliminating the redundant associations, we get the valid
+			<a href="/static/famclurank_association_data.txt" target="_blank">association data</a>.
+		</p>
+		<div class="page-header">
+			<h3>Similarity data</h3>
+		</div>
+		<p style="font-size: 16px">
+			The miRNA functional similarities calculated based on the associations of HMDD: <a
+			href="/static/famclurank_mir_sim_data2.xlsx" target="_blank">miRNA similarity data</a>.
+			<br/>
+			The disease similarities calculated based on their directed acyclic graphs:
+			<a href="/static/famclurank_dis_sim_data2.xlsx" target="_blank">disease similarity data </a>.
+		</p>
+		<div class="page-header">
+			<h3>Candidates data</h3>
+		</div>
+		<p style="font-size: 16px">
+			The potential miRNA candidates associated with diseases, their ranking, and their association
+			scores: <a
+			href="/static/famclurank_candidate_data2.xlsx" target="_blank">candidates data</a>.
+		</p>
+	</div>
+</div>
+
+
+<div id="footer">
+	<div id="footer-wrap">
+		<p id="legal">
+			<img style="height:30px;width:30px;vertical-align: middle;"
+					 src="http://upload-images.jianshu.io/upload_images/3229842-784916dee47794ce.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+			If you have any problem of running FamCluRank web server, please contact
+
+			<a href="mailto:xuanpinghdu@126.com" data-toggle="tooltip" title=""
+				 data-original-title="xuanpinghdu@126.com">Ping Xuan</a> or
+			<a href="mailto:xuanpinghdu@126.com" data-toggle="tooltip" title=""
+				 data-original-title="xuanpinghdu@126.com">Tiangang Zhang</a>.</p>
+	</div>
+</div>
+</body>
+</html>

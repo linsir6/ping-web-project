@@ -4,19 +4,24 @@
 var fs = require('fs');
 var mysql = require('mysql');
 
-//var user = 'debian-sys-maint'; 
-//var password = 'UyFGHFTr7gFhOnVF';
 
-var user = 'root';
-var password = 'root';
+
+var client = mysql.createConnection({
+    host: '127.0.0.1',
+    user: 'root',
+    password: '',
+    port: '3306',
+    database: 'db_biology'
+});
+client.connect(function (err) {
+    console.log("---lin---> connect error" + err);
+    if (err) throw err
+}); 
+
+
+
 
 exports.get_all_disease = function () {
-    var client = mysql.createConnection({
-        user: user,
-        password: password,
-        database: 'db_biology'
-    });
-    client.connect();
     var promise = new Promise(function (resolve, reject) {
         client.query('SELECT distinct disname FROM tpredict_dmpred', function (err, result) {
             if (result) {
@@ -27,7 +32,7 @@ exports.get_all_disease = function () {
             }
         });
     });
-    client.end();
+    
     return promise.then(function (value) {
         return value;
     }, function (value) {
@@ -38,14 +43,10 @@ exports.get_all_disease = function () {
 
 
 exports.get_all_mirna = function () {
-    var client = mysql.createConnection({
-        user: user,
-        password: password,
-        database: 'db_biology'
-    });
-    client.connect();
     var promise = new Promise(function (resolve, reject) {
         client.query('SELECT distinct miname FROM tpredict_dmpred ORDER BY miname', function (err, result) {
+            console.log("result",result);
+            console.log("err",err);
             if (result) {
                 var obj = {
                     "name": result
@@ -54,7 +55,6 @@ exports.get_all_mirna = function () {
             }
         });
     });
-    client.end();
     return promise.then(function (value) {
         return value;
     }, function (value) {
@@ -67,13 +67,7 @@ exports.get_all_mirna = function () {
 var all_pradiction2_2;
 
 exports.get_all_prediction1_1 = function (value) {
-    var client = mysql.createConnection({
-        user: user,
-        password: password,
-        database: 'db_biology'
-    });
     var list = new Array();
-    client.connect();
     var promise = new Promise(function (resolve, reject) {
         client.query("SELECT * FROM tpredict_dmpred WHERE disname='" + value + "' ORDER BY score DESC",
             function (err, result) {
@@ -86,7 +80,6 @@ exports.get_all_prediction1_1 = function (value) {
                 }
             });
     });
-    client.end();
     return promise.then(function (value) {
         return value;
     }, function (value) {
@@ -97,13 +90,6 @@ exports.get_all_prediction1_1 = function (value) {
 
 
 exports.get_all_prediction1_2 = function (value) {
-    var client = mysql.createConnection({
-        user: user,
-        password: password,
-        database: 'db_biology'
-    });
-    //创建连接
-    client.connect();
     var promise = new Promise(function (resolve, reject) {
         client.query("SELECT * FROM tknownresult WHERE disname='" + value + "'",
             function (err, result) {
@@ -116,7 +102,6 @@ exports.get_all_prediction1_2 = function (value) {
                 }
             });
     });
-    client.end();
     return promise.then(function (value) {
         return value;
     }, function (value) {
@@ -128,13 +113,7 @@ exports.get_all_prediction1_2 = function (value) {
 
 
 exports.get_all_prediction2_1 = function (value) {
-    var client = mysql.createConnection({
-        user: user,
-        password: password,
-        database: 'db_biology'
-    });
     var list = new Array();
-    client.connect();
     var promise = new Promise(function (resolve, reject) {
         client.query("SELECT * FROM tpredict_dmpred WHERE miname='" + value + "' ORDER BY score DESC",
             function (err, result) {
@@ -146,7 +125,7 @@ exports.get_all_prediction2_1 = function (value) {
                 }
             });
     });
-    client.end();
+    
     return promise.then(function (value) {
         return value;
     }, function (value) {
@@ -158,12 +137,6 @@ exports.get_all_prediction2_1 = function (value) {
 
 
 exports.get_all_prediction2_2 = function (value) {
-    var client = mysql.createConnection({
-        user: user,
-        password: password,
-        database: 'db_biology'
-    });
-    client.connect();
     var promise = new Promise(function (resolve, reject) {
         client.query("SELECT * FROM tknownresult WHERE miname='" + value + "'",
             function (err, result) {
@@ -175,7 +148,7 @@ exports.get_all_prediction2_2 = function (value) {
                 }
             });
     });
-    client.end();
+    
     return promise.then(function (value) {
         return value;
     }, function (value) {
@@ -189,11 +162,6 @@ exports.get_all_prediction2_2 = function (value) {
 
 
 exports.get_similarly = function (list) {
-    var client = mysql.createConnection({
-        user: user,
-        password: password,
-        database: 'db_biology'
-    });
     var str2 = "(";
     for (var i = 0; i < list.length; i++) {
         if (i != list.length - 1)
@@ -209,7 +177,7 @@ exports.get_similarly = function (list) {
             str2 = str2 + "'" + list[i] + "'";
     }
     str2 = str2 + ")";
-    client.connect();
+    
     var promise = new Promise(function (resolve, reject) {
         client.query("SELECT * FROM Sheet1 WHERE field1 in " + str2,
             function (err, result) {
@@ -232,12 +200,7 @@ exports.get_similarly = function (list) {
 
 
 exports.get_all_famclurank_disease = function () {
-    var client = mysql.createConnection({
-        user: user,
-        password: password,
-        database: 'db_biology'
-    });
-    client.connect();
+    
     var promise = new Promise(function (resolve, reject) {
         client.query("SELECT distinct disname FROM tmidislatest_famclurank",
             function (err, result) {
@@ -249,7 +212,7 @@ exports.get_all_famclurank_disease = function () {
                 }
             });
     });
-    client.end();
+    
     return promise.then(function (value) {
         return value;
     }, function (value) {
@@ -261,12 +224,7 @@ exports.get_all_famclurank_disease = function () {
 
 exports.get_all_famclurank_known_mirnas = function (disease_name) {
 
-    var client = mysql.createConnection({
-        user: user,
-        password: password,
-        database: 'db_biology'
-    });
-    client.connect();
+    
     var promise = new Promise(function (resolve, reject) {
         client.query("SELECT distinct miname FROM tmidislatest_famclurank WHERE disname='" + disease_name + "'",
             function (err, result) {
@@ -281,7 +239,7 @@ exports.get_all_famclurank_known_mirnas = function (disease_name) {
                 }
             });
     });
-    client.end();
+    
     return promise.then(function (value) {
         return value;
     }, function (value) {
@@ -293,12 +251,7 @@ exports.get_all_famclurank_known_mirnas = function (disease_name) {
 
 
 exports.get_all_famclurank_unknown_mirnas = function (disease_name) {
-    var client = mysql.createConnection({
-        user: user,
-        password: password,
-        database: 'db_biology'
-    });
-    client.connect();
+    
     var promise = new Promise(function (resolve, reject) {
         client.query("SELECT distinct * FROM tpredict_famclurank WHERE disname='" + disease_name + "' ORDER BY 'score' DESC",
             function (err, result) {
@@ -313,7 +266,7 @@ exports.get_all_famclurank_unknown_mirnas = function (disease_name) {
                 }
             });
     });
-    client.end();
+    
     return promise.then(function (value) {
         return value;
     }, function (value) {
